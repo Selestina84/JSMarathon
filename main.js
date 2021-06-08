@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function () {
   const $arenas = document.querySelector('.arenas');
-  const $randomButton = document.querySelector('.button');
+  const $randomButton = document.querySelector('.control>.button');
   const player1 = {
     player: 1,
     name: 'Kitana',
@@ -9,7 +9,10 @@ window.addEventListener('DOMContentLoaded', function () {
     weapon: [],
     attak: function () {
       console.log(`${this.name} Fight...`)
-    }
+    },
+    changeHp: changeHp,
+    elHp: elHp,
+    renderHp: renderHp
   };
   const player2 = {
     player: 2,
@@ -19,7 +22,10 @@ window.addEventListener('DOMContentLoaded', function () {
     weapon: [],
     attak: function () {
       console.log(`${this.name} Fight...`)
-    }
+    },
+    changeHp: changeHp,
+    elHp: elHp,
+    renderHp: renderHp
   };
   function createElement(tag, className){
     $tag = document.createElement(tag);
@@ -69,26 +75,53 @@ window.addEventListener('DOMContentLoaded', function () {
     $arenas.appendChild($winTitle);
    
   }
+  
+  function createReloadButton(){
+    const $reloadWrap = createElement('div', 'reloadWrap');
+    const $reloadButton = createElement('button', 'button');
+    $reloadButton.innerHTML = 'Restart';
+    $reloadWrap.appendChild($reloadButton);
+ 
+    return $reloadWrap;
+  }
+ 
 
-  function changeHp(player){
-    const $playerLife = document.querySelector('.player'+player.player + ' .life');
-    player.hp -= getRandom(20);
-
-    if(player.hp <= 0){
-      $playerLife.style.width = '0%';
+  function changeHp(n){
+    if(this.hp>0){
+      this.hp-=n;
     }
     else {
-      $playerLife.style.width = `${player.hp}%`;
+      this.hp = 0;
     }
+    return this.hp;
+  }
 
+  function elHp(){
+    return document.querySelector(`.player${this.player} .life`);
+  }
+
+  function renderHp(){
+    if(this.hp <= 0){
+
+      this.elHp().style.width = '0%';
+    }
+    else {
+      this.elHp().style.width = `${this.hp}%`;
+    }
   }
 
   $randomButton.addEventListener('click',function(){
-    changeHp(player1);
-    changeHp(player2);
+    player1.changeHp(getRandom(20));
+    player1.renderHp();
+    player2.changeHp(getRandom(20));
+    player2.renderHp();
   if (player1.hp <= 0 || player2.hp <= 0){
     $randomButton.style.backgroundColor = 'grey';
     $randomButton.disabled = true;
+    $arenas.appendChild(createReloadButton());
+    document.querySelector('.reloadWrap>.button').addEventListener('click',function(){
+      window.location.reload();
+    } )
   }
 
   if (player1.hp <= 0 && player1.hp < player2.hp){
@@ -103,5 +136,7 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   })
+  
+  
 
 });
