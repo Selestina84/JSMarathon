@@ -53,25 +53,26 @@ window.addEventListener('DOMContentLoaded', function () {
 
   $arenas.appendChild(createPlayer(player1));
   $arenas.appendChild(createPlayer(player2));
+
+  function getRandom(n){
+    return Math.ceil(Math.random()*n);
+  }
   
-  function playerWin(name){
+  function showResultText(name){
     const $winTitle = createElement('div', 'winTitle');
     if(name){
       $winTitle.innerHTML = name + ' win!!!';
     }
     else {
-      $winTitle.innerHTML = 'Game over! Tie!';
+      $winTitle.innerHTML = 'draw!';
     }
-   
     $arenas.appendChild($winTitle);
-    $randomButton.style.backgroundColor = 'grey';
-    $randomButton.disabled = true;
+   
   }
 
   function changeHp(player){
     const $playerLife = document.querySelector('.player'+player.player + ' .life');
-  
-    player.hp -= Math.ceil(Math.random()*20);
+    player.hp -= getRandom(20);
 
     if(player.hp <= 0){
       $playerLife.style.width = '0%';
@@ -79,27 +80,27 @@ window.addEventListener('DOMContentLoaded', function () {
     else {
       $playerLife.style.width = `${player.hp}%`;
     }
-   return player.hp;
-  }
 
-  function getWinner(player){
-    let winner = false;
-    if(player.hp<=0){
-      winner = false;
-    } else winner = true;
-    return winner;
   }
 
   $randomButton.addEventListener('click',function(){
     changeHp(player1);
     changeHp(player2);
-    if (!getWinner(player1) && getWinner(player2)){
-      playerWin(player2.name)
-    } if (!getWinner(player2) && getWinner(player1)){
-      playerWin(player1.name)
-    } if (!getWinner(player1) && !getWinner(player2)){
-      playerWin();
-    } else return;
+  if (player1.hp <= 0 || player2.hp <= 0){
+    $randomButton.style.backgroundColor = 'grey';
+    $randomButton.disabled = true;
+  }
+
+  if (player1.hp <= 0 && player1.hp < player2.hp){
+    showResultText(player2.name)
+  }
+  else if (player2.hp <= 0 && player2.hp < player1.hp){
+    showResultText(player1.name)
+  }
+
+  else if (player2.hp <= 0 && player2.hp <= 0) {
+    showResultText();
+  }
 
   })
 
