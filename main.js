@@ -112,7 +112,7 @@ window.addEventListener('DOMContentLoaded', function () {
     player1.renderHp();
     player2.changeHp(getRandom(20));
     player2.renderHp();
-  if (player1.hp <= 0 || player2.hp <= 0){
+  if (player1.hp === 0 || player2.hp === 0){
     $randomButton.style.backgroundColor = 'grey';
     $randomButton.disabled = true;
    createReloadButton();
