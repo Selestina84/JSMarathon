@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function () {
   const $arenas = document.querySelector('.arenas');
-  const $randomButton = document.querySelector('.button');
+  const $randomButton = document.querySelector('.control>.button');
   const player1 = {
     player: 1,
     name: 'Kitana',
@@ -9,7 +9,10 @@ window.addEventListener('DOMContentLoaded', function () {
     weapon: [],
     attak: function () {
       console.log(`${this.name} Fight...`)
-    }
+    },
+    changeHp,
+    elHp,
+    renderHp
   };
   const player2 = {
     player: 2,
@@ -19,7 +22,10 @@ window.addEventListener('DOMContentLoaded', function () {
     weapon: [],
     attak: function () {
       console.log(`${this.name} Fight...`)
-    }
+    },
+    changeHp,
+    elHp,
+    renderHp
   };
   function createElement(tag, className){
     $tag = document.createElement(tag);
@@ -69,39 +75,62 @@ window.addEventListener('DOMContentLoaded', function () {
     $arenas.appendChild($winTitle);
    
   }
+  
+  function createReloadButton(){
+    const $reloadWrap = createElement('div', 'reloadWrap');
+    const $reloadButton = createElement('button', 'button');
+    $reloadButton.innerHTML = 'Restart';
+    $reloadWrap.appendChild($reloadButton);
+    $arenas.appendChild($reloadWrap)
+    $reloadButton.addEventListener('click',function(){
+      window.location.reload();
+    } )
+  }
+ 
 
-  function changeHp(player){
-    const $playerLife = document.querySelector('.player'+player.player + ' .life');
-    player.hp -= getRandom(20);
+  function changeHp(n){
+    this.hp-=n;
+    if(this.hp<=n){
+      this.hp = 0;
+    }
 
-    if(player.hp <= 0){
-      $playerLife.style.width = '0%';
-    }
-    else {
-      $playerLife.style.width = `${player.hp}%`;
-    }
+    return this.hp;
+  }
+
+  function elHp(){
+    return document.querySelector(`.player${this.player} .life`);
+  }
+
+  function renderHp(){
+  
+      this.elHp().style.width = `${this.hp}%`;
 
   }
 
   $randomButton.addEventListener('click',function(){
-    changeHp(player1);
-    changeHp(player2);
+    player1.changeHp(getRandom(20));
+    player1.renderHp();
+    player2.changeHp(getRandom(20));
+    player2.renderHp();
   if (player1.hp <= 0 || player2.hp <= 0){
     $randomButton.style.backgroundColor = 'grey';
     $randomButton.disabled = true;
+   createReloadButton();
   }
 
-  if (player1.hp <= 0 && player1.hp < player2.hp){
+  if (player1.hp === 0 && player1.hp < player2.hp){
     showResultText(player2.name)
   }
-  else if (player2.hp <= 0 && player2.hp < player1.hp){
+  else if (player2.hp === 0 && player2.hp < player1.hp){
     showResultText(player1.name)
   }
 
-  else if (player2.hp <= 0 && player2.hp <= 0) {
+  else if (player2.hp === 0 && player2.hp === 0) {
     showResultText();
   }
 
   })
+  
+  
 
 });
