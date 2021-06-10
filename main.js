@@ -10,9 +10,9 @@ window.addEventListener('DOMContentLoaded', function () {
     attak: function () {
       console.log(`${this.name} Fight...`)
     },
-    changeHp: changeHp,
-    elHp: elHp,
-    renderHp: renderHp
+    changeHp,
+    elHp,
+    renderHp
   };
   const player2 = {
     player: 2,
@@ -23,9 +23,9 @@ window.addEventListener('DOMContentLoaded', function () {
     attak: function () {
       console.log(`${this.name} Fight...`)
     },
-    changeHp: changeHp,
-    elHp: elHp,
-    renderHp: renderHp
+    changeHp,
+    elHp,
+    renderHp
   };
   function createElement(tag, className){
     $tag = document.createElement(tag);
@@ -81,18 +81,19 @@ window.addEventListener('DOMContentLoaded', function () {
     const $reloadButton = createElement('button', 'button');
     $reloadButton.innerHTML = 'Restart';
     $reloadWrap.appendChild($reloadButton);
- 
-    return $reloadWrap;
+    $arenas.appendChild($reloadWrap)
+    $reloadButton.addEventListener('click',function(){
+      window.location.reload();
+    } )
   }
  
 
   function changeHp(n){
-    if(this.hp>0){
-      this.hp-=n;
-    }
-    else {
+    this.hp-=n;
+    if(this.hp<=n){
       this.hp = 0;
     }
+
     return this.hp;
   }
 
@@ -101,13 +102,9 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderHp(){
-    if(this.hp <= 0){
-
-      this.elHp().style.width = '0%';
-    }
-    else {
+  
       this.elHp().style.width = `${this.hp}%`;
-    }
+
   }
 
   $randomButton.addEventListener('click',function(){
@@ -118,20 +115,17 @@ window.addEventListener('DOMContentLoaded', function () {
   if (player1.hp <= 0 || player2.hp <= 0){
     $randomButton.style.backgroundColor = 'grey';
     $randomButton.disabled = true;
-    $arenas.appendChild(createReloadButton());
-    document.querySelector('.reloadWrap>.button').addEventListener('click',function(){
-      window.location.reload();
-    } )
+   createReloadButton();
   }
 
-  if (player1.hp <= 0 && player1.hp < player2.hp){
+  if (player1.hp === 0 && player1.hp < player2.hp){
     showResultText(player2.name)
   }
-  else if (player2.hp <= 0 && player2.hp < player1.hp){
+  else if (player2.hp === 0 && player2.hp < player1.hp){
     showResultText(player1.name)
   }
 
-  else if (player2.hp <= 0 && player2.hp <= 0) {
+  else if (player2.hp === 0 && player2.hp === 0) {
     showResultText();
   }
 
