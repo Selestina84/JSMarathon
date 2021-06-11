@@ -1,6 +1,8 @@
 window.addEventListener('DOMContentLoaded', function () {
   const $arenas = document.querySelector('.arenas');
-  const $randomButton = document.querySelector('.control>.button');
+  const $formFight = document.querySelector('.control');
+  const $buttonFight = document.querySelector('.buttonWrap .button');
+
   const player1 = {
     player: 1,
     name: 'Kitana',
@@ -27,6 +29,14 @@ window.addEventListener('DOMContentLoaded', function () {
     elHp,
     renderHp
   };
+
+  const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+ };
+ const ATTACK = ['head', 'body', 'foot'];
+
   function createElement(tag, className){
     $tag = document.createElement(tag);
     if(className){
@@ -72,7 +82,7 @@ window.addEventListener('DOMContentLoaded', function () {
     else {
       $winTitle.innerHTML = 'draw!';
     }
-    $arenas.appendChild($winTitle);
+    $arenas.prepend($winTitle);
    
   }
   
@@ -106,31 +116,56 @@ window.addEventListener('DOMContentLoaded', function () {
       this.elHp().style.width = `${this.hp}%`;
 
   }
-
-  $randomButton.addEventListener('click',function(){
-    player1.changeHp(getRandom(20));
-    player1.renderHp();
-    player2.changeHp(getRandom(20));
-    player2.renderHp();
-  if (player1.hp <= 0 || player2.hp <= 0){
-    $randomButton.style.backgroundColor = 'grey';
-    $randomButton.disabled = true;
-   createReloadButton();
+function enemyAttack(){
+  const hit = ATTACK[getRandom(3)-1];
+  const defence = ATTACK[getRandom(3)-1];
+  return {
+    value: getRandom(HIT[hit]),
+    hit,
+    defence
   }
+}
 
-  if (player1.hp === 0 && player1.hp < player2.hp){
-    showResultText(player2.name)
-  }
-  else if (player2.hp === 0 && player2.hp < player1.hp){
-    showResultText(player1.name)
-  }
+  $formFight.addEventListener('submit', function(e){
+    e.preventDefault();
+    const enemy = enemyAttack();
+    const attack = {};
 
-  else if (player2.hp === 0 && player2.hp === 0) {
-    showResultText();
-  }
-
+    for (let item of $formFight){
+      if (item.checked && item.name === 'hit'){
+        attack.value = getRandom(HIT[item.value]);
+        attack.hit = item.value;
+      }
+      if (item.checked && item.name === 'defence'){
+        attack.defence = item.value
+      }
+      item.checked = false;
+    }
+   
+    if (enemy.hit !== attack.defence){
+      player1.changeHp(enemy.value);
+      player1.renderHp();
+    }
+    if(attack.hit !== enemy.defence){
+      player2.changeHp(attack.value);
+      player2.renderHp();
+    }
+    if (player1.hp === 0 || player2.hp === 0){
+      $buttonFight.style.backgroundColor = 'grey';
+      $buttonFight.disabled = true;
+     createReloadButton();
+    }
+    if (player1.hp === 0 && player1.hp < player2.hp){
+      showResultText(player2.name)
+    }
+    else if (player2.hp === 0 && player2.hp < player1.hp){
+      showResultText(player1.name)
+    }
+  
+    else if (player2.hp === 0 && player2.hp === 0) {
+      showResultText();
+    }
   })
-  
-  
+
 
 });
