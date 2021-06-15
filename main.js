@@ -128,8 +128,10 @@ window.addEventListener('DOMContentLoaded', function () {
         break;
       case 'draw':
         insertChat(`${timeNow} ${logs[type]}`);
+        break;
       case 'end':
         insertChat( `${timeNow} ${logs[type][getRandom(logs.end.length)-1].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name)}`);
+        break;
     }
   }
   
