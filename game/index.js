@@ -1,6 +1,7 @@
-import {HIT, ATTACK, LOGS, $arenas, $formFight} from '/constans/index.js';
+import {HIT, ATTACK, $arenas, $formFight} from '/constans/index.js';
 import Player from '/players/index.js';
-import {getRandom, createElement, getTime, insertChat} from '/utils/index.js'
+import {getRandom, createElement} from '/utils/index.js';
+import generateLogs from '/logs/index.js';
 class Game {
  constructor(){
   this.player1 = new Player({
@@ -19,49 +20,26 @@ class Game {
   })
  }
 
-generateLogs = (type, {name: name1}, {name: name2}, player, value) => {
-  
-  switch (type){
-    case 'start':
-      insertChat(LOGS[type].replace('[time]', getTime()).replace('[player1]', name1).replace('[player2]', name2)); 
-      break;
-    case 'hit': 
-      insertChat(`${getTime()} ${LOGS[type][getRandom(logs.hit.length)-1].replace('[playerKick]', name1).replace('[playerDefence]', name2)} -${value} [${player.hp}/100]`);
-      break;
-    case 'defence':
-      insertChat(`${getTime()} ${LOGS[type][getRandom(logs.defence.length)-1].replace('[playerKick]', name1).replace('[playerDefence]', name2)} `);
-      break;
-    case 'draw':
-      insertChat(`${getTime()} ${LOGS[type]}`);
-      break;
-    case 'end':
-      insertChat( `${getTime()} ${LOGS[type][getRandom(logs.end.length)-1].replace('[playerWins]', name1).replace('[playerLose]', name2)}`);
-      break;
-    default:
-       insertChat("Что то пошло не так. Перезагрузите страницу!");
-       break;
 
-  }
-} 
 
  showResult = () => {
  if (this.player1.hp === 0 || this.player2.hp === 0){
   document.querySelector('.buttonWrap .button').style.backgroundColor = 'grey';
   document.querySelector('.buttonWrap .button').disabled = true;
-  createReloadButton();
+  this.createReloadButton();
  }
  if (this.player1.hp === 0 && this.player1.hp < this.player2.hp){
    this.showResultText(this.player2.name);
-   this.generateLogs('end', this.player2, this.player1);
+   generateLogs('end', this.player2, this.player1);
  }
  else if (this.player2.hp === 0 && this.player2.hp < this.player1.hp){
    this.showResultText(this.player1.name);
-   this.generateLogs('end', this.player1, this.player2);
+   generateLogs('end', this.player1, this.player2);
  }
 
  else if (this.player2.hp === 0 && this.player2.hp === 0) {
    this.showResultText();
-   this.generateLogs('draw');
+   generateLogs('draw', this.player1, this.player2);
  }
 }
 showResultText = (name) => {
@@ -111,40 +89,36 @@ enemyAttack = () =>{
 
 }
 
-start = () => {
- this.generateLogs('start', this.player1, this.player2);
- this.player1.createPlayer();
- this.player1.changeHp();
- this.player1.elHp();
- this.player1.renderHp();
- this.player2.createPlayer();
- this.player2.changeHp();
- this.player2.elHp();
- this.player2.renderHp();
- $formFight.addEventListener('submit', function(e){
-  e.preventDefault();
-  console.log(this.enemyAttack)
-  const enemy = this.enemyAttack();
-  const player = this.playerAttack();
- 
+gamePlay = (enemy, player) => {
   if (enemy.hit !== player.defence){
     this.player1.changeHp(enemy.value);
     this.player1.renderHp();
-    this.generateLogs('hit', this.player2, this.player1, this.player1, enemy.value);
+    generateLogs('hit', this.player2, this.player1, this.player1, enemy.value);
   }
   if(player.hit !== enemy.defence){
-    player2.changeHp(player.value);
-    player2.renderHp();
-    this.generateLogs('hit', this.player1, this.player2, this.player2, player.value);
+    this.player2.changeHp(player.value);
+    this.player2.renderHp();
+    generateLogs('hit', this.player1, this.player2, this.player2, player.value);
   }
   if(player.hit === enemy.defence ){
-    this.generateLogs('defence', this.player1, this.player2);
+    generateLogs('defence', this.player1, this.player2);
   }
   if(enemy.hit === player.defence){
-    this.generateLogs('defence', this.player2, this.player1);
+    generateLogs('defence', this.player2, this.player1);
   }
   this.showResult();
+}
 
+start = () => {
+ generateLogs('start', this.player1, this.player2);
+ this.player1.createPlayer();
+ this.player2.createPlayer();
+
+ $formFight.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const enemy = this.enemyAttack();
+  const player = this.playerAttack();
+  this.gamePlay(enemy, player);
 })
 
 }

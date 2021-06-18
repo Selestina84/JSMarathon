@@ -9,7 +9,8 @@ class Player {
   this.rootSelector = props.rootSelector;
  }
   changeHp = (n) => {
-  this.hp-=n;
+    
+  this.hp -= n;
   if(this.hp<=n){
     this.hp = 0;
   }
@@ -38,7 +39,9 @@ class Player {
    $character.appendChild($playerImg);
    $player.appendChild($character);
    
-   document.querySelector(`.${this.rootSelector}`).appendChild($player)
+   document.querySelector(`.${this.rootSelector}`).appendChild($player);
+   this.elHp();
+   this.renderHp();
    return $player;
   };
 
