@@ -265,6 +265,7 @@ body {
 .button:disabled {
     opacity: .9;
     cursor: not-allowed;
+    background-color: #424542;
 }
 
 .button:disabled:after {

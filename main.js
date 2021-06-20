@@ -1,4 +1,4 @@
-  import {player1, player2, enemyAttack, playerAttack} from './modules/players.js';
+/*   import {player1, player2, enemyAttack, playerAttack} from './modules/players.js';
   import { createPlayer, showResult } from './modules/elements.js';
   import { generateLogs } from './modules/logs.js';
   import { $arenas, $formFight } from './modules/storage.js';
@@ -33,6 +33,10 @@
     }
     showResult();
 
-  })
-
+  }) */
+  import Game from '/game/index.js';
+  
+  const game = new Game();
+   
+  game.start()
 

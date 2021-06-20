@@ -6,7 +6,7 @@ const HIT = {
  foot: 20,
 };
 const ATTACK = ['head', 'body', 'foot'];
-const logs = {
+const LOGS = {
 start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
 end: [
    'Результат удара [playerWins]: [playerLose] - труп',
@@ -46,4 +46,4 @@ defence: [
 draw: 'Ничья - это тоже победа!'
 };
 
-export {HIT, ATTACK, logs, $arenas, $formFight}
+export {HIT, ATTACK, LOGS, $arenas, $formFight};
