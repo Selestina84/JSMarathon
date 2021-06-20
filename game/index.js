@@ -24,7 +24,6 @@ class Game {
 
  showResult = () => {
  if (this.player1.hp === 0 || this.player2.hp === 0){
-  document.querySelector('.buttonWrap .button').style.backgroundColor = 'grey';
   document.querySelector('.buttonWrap .button').disabled = true;
   this.createReloadButton();
  }
