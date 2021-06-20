@@ -82,14 +82,14 @@ showResultText = (name) => {
    }
    item.checked = false;
  }
- console.log(data)
  return data;
 }
 
 getPlayData = (data) => {
   let playData = await api('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', 'POST', data);
-  console.log(playData);
-  return playData;
+  let attack = {...playData};
+  console.log(attack)
+  return attack;
 } 
 
 
