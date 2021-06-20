@@ -21,5 +21,22 @@ const insertChat = (text) =>{
  document.querySelector('.chat').insertAdjacentHTML('beforeend', el);
 }
 
+ async function api(adress, method, data) {
+   let answer;
+  switch(method){
+    case 'GET':
+      answer = await fetch(adress).then(res => res.json());
+      console.log(answer);
+      return answer;
+    case 'POST':
+        answer = await fetch(adress, {
+          body: JSON.stringify(data)
+        }).then(res => res.json());
+        console.log(answer);
+        return answer;
+    default:
+      console.log('Что то пошло не так');
+  }
+}
 
-export {getRandom, createElement, getTime, insertChat}
+export {getRandom, createElement, getTime, insertChat, api}

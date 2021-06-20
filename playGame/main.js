@@ -34,7 +34,7 @@
     showResult();
 
   }) */
-  import Game from '/game/index.js';
+  import Game from '/playGame/game/index.js';
   
   const game = new Game();
    
