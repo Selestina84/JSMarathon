@@ -1,5 +1,5 @@
-import {LOGS} from '/constans/index.js';
-import {getRandom, getTime, insertChat} from '/utils/index.js';
+import {LOGS} from '/playGame/constans/index.js';
+import {getRandom, getTime, insertChat} from '/playGame/utils/index.js';
 
 const generateLogs = (type, {name: name1}, {name: name2}, player, value) => {
 

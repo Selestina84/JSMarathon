@@ -1,25 +1,23 @@
-import {HIT, ATTACK, $arenas, $formFight} from '/constans/index.js';
-import Player from '/players/index.js';
-import {getRandom, createElement} from '/utils/index.js';
-import generateLogs from '/logs/index.js';
+import {HIT, ATTACK, $arenas, $formFight} from '/playGame/constans/index.js';
+import Player from '/playGame/players/index.js';
+import {getRandom, createElement, api} from '/playGame/utils/index.js';
+import generateLogs from '/playGame/logs/index.js';
+let player1 = JSON.parse(localStorage.getItem('player1'));
+let player2 = await api('https://reactmarathon-api.herokuapp.com/api/mk/player/choose', 'GET');
+
 class Game {
- constructor(){
+  constructor(){
   this.player1 = new Player({
-   name: 'Kitana',
-   hp: 100,
-   img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
+   ...player1,
    player: 1,
    rootSelector: 'arenas',
   }) 
   this.player2 = new Player({
-   name: 'Subzero',
-   hp: 100,
-   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+   ...player2,
    player: 2,
    rootSelector: 'arenas'
   })
- }
-
+ }; 
 
 
  showResult = () => {
@@ -62,7 +60,7 @@ showResultText = (name) => {
    window.location.reload();
  } )
 }
-enemyAttack = () =>{
+/* enemyAttack = () =>{
  const hit = ATTACK[getRandom(3)-1];
  const defence = ATTACK[getRandom(3)-1];
  return {
@@ -70,23 +68,31 @@ enemyAttack = () =>{
    hit,
    defence
  }
-}
- playerAttack = () => {
- const attack = {};
+} */
+ formData = () => {
+ const data = {};
 
  for (let item of $formFight){
    if (item.checked && item.name === 'hit'){
-     attack.value = getRandom(HIT[item.value]);
-     attack.hit = item.value;
+
+     data.hit = item.value;
    }
    if (item.checked && item.name === 'defence'){
-     attack.defence = item.value
+     data.defence = item.value
    }
    item.checked = false;
  }
- return attack;
-
+ console.log(data)
+ return data;
 }
+
+getPlayData = (data) => {
+  let playData = await api('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', 'POST', data);
+  console.log(playData);
+  return playData;
+} 
+
+
 
 gamePlay = (enemy, player) => {
   if (enemy.hit !== player.defence){
@@ -112,11 +118,15 @@ start = () => {
  generateLogs('start', this.player1, this.player2);
  this.player1.createPlayer();
  this.player2.createPlayer();
+ 
 
  $formFight.addEventListener('submit', (e) => {
+
   e.preventDefault();
-  const enemy = this.enemyAttack();
-  const player = this.playerAttack();
+  console.log(this.getPlayData(this.formData()))
+  let playData = this.getPlayData(this.formData());
+  const enemy = playData.player1;
+  const player = playData.player2;
   this.gamePlay(enemy, player);
 })
 

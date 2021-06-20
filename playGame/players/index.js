@@ -1,4 +1,4 @@
-import {createElement} from '/utils/index.js';
+import {createElement} from '/playGame/utils/index.js';
 class Player {
  constructor(props){
   this.name = props.name;
